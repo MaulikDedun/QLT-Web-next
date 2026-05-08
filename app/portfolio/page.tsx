@@ -32,7 +32,7 @@ export default function PortfolioPage() {
           {projects.map((item, index) => (
             <div key={item.slug} className="min-w-0 flex-[0_0_88%] pr-4 md:flex-[0_0_55%]">
               <motion.article
-                className="rounded-3xl border border-black/10 bg-[#f3f3f3] p-6"
+                className="rounded-3xl border border-black/10 bg-[var(--bg-secondary)] p-6"
                 animate={{ opacity: active === index ? 1 : 0.55, scale: active === index ? 1 : 0.96 }}
                 onMouseEnter={() => setExpanded(index)}
                 onMouseLeave={() => setExpanded(null)}
@@ -50,7 +50,7 @@ export default function PortfolioPage() {
                       className="mt-4 border-t border-black/10 pt-4 text-sm text-[#6b6b6b]"
                     >
                       <p>{item.summary}</p>
-                      <Link href={`/portfolio/${item.slug}`} className="mt-3 inline-block border-b border-black pb-0.5 text-black">
+                      <Link href={`/portfolio/${item.slug}`} className="text-hover-link mt-3 inline-block text-black">
                         View Case Study →
                       </Link>
                     </motion.div>

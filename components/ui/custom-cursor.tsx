@@ -12,8 +12,8 @@ export function CustomCursor() {
 
   useEffect(() => {
     const move = (event: MouseEvent) => {
-      cursorX.set(event.clientX - 20);
-      cursorY.set(event.clientY - 20);
+      cursorX.set(event.clientX - 18);
+      cursorY.set(event.clientY - 18);
     };
 
     const onOver = (event: Event) => {
@@ -32,9 +32,9 @@ export function CustomCursor() {
 
   return (
     <motion.div
-      className="pointer-events-none fixed left-0 top-0 z-[100] hidden h-10 w-10 items-center justify-center rounded-full border border-black/25 bg-white/80 text-[9px] uppercase tracking-[0.2em] text-black backdrop-blur-xl md:flex"
+      className="pointer-events-none fixed left-0 top-0 z-[100] hidden h-9 min-w-9 items-center justify-center rounded-full border border-white/35 bg-[#0f172a]/90 px-2 text-[9px] uppercase tracking-[0.16em] text-white shadow-[0_8px_30px_rgba(2,6,23,0.35)] backdrop-blur-xl md:flex"
       style={{ x, y }}
-      animate={{ scale: label ? 1.6 : 1, opacity: 1 }}
+      animate={{ scale: label ? 1.2 : 1, opacity: 1, width: label ? 84 : 36 }}
       transition={{ duration: 0.25, ease: [0.76, 0, 0.24, 1] }}
     >
       <span className="select-none">{label}</span>

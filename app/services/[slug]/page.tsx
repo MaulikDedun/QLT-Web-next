@@ -16,7 +16,7 @@ export default async function ServiceDetailPage({ params }: ServicePageProps) {
   return (
     <main className="px-6 pt-28 pb-16 md:px-12">
       <section className="mx-auto max-w-6xl">
-        <Link href="/services" className="text-sm text-[#6b6b6b]">
+        <Link href="/services" className="text-hover-link text-sm text-[#6b6b6b]">
           Back to Services
         </Link>
         <h1 className="mt-4 text-5xl font-semibold md:text-7xl">{title}</h1>

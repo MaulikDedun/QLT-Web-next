@@ -14,7 +14,7 @@ export default function AboutPage() {
           "Scalable architecture",
           "Experience-driven execution",
         ].map((item) => (
-          <article key={item} className="rounded-3xl border border-black/10 bg-[#f3f3f3] p-8">
+          <article key={item} className="rounded-3xl border border-black/10 bg-[var(--bg-secondary)] p-8">
             <h2 className="text-2xl">{item}</h2>
           </article>
         ))}

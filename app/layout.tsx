@@ -6,6 +6,7 @@ import { FloatingNavbar } from "@/components/navigation/floating-navbar";
 import { SmoothScrollProvider } from "@/components/providers/smooth-scroll-provider";
 import { CustomCursor } from "@/components/ui/custom-cursor";
 import { SiteLoader } from "@/components/ui/site-loader";
+import { SiteFooter } from "@/components/navigation/site-footer";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -32,13 +33,14 @@ export default function RootLayout({
       lang="en"
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
     >
-      <body className="min-h-full flex flex-col bg-white text-[#111111]">
+      <body className="min-h-full flex flex-col bg-[var(--bg-primary)] text-[var(--text-primary)]">
         <SiteLoader />
         <SmoothScrollProvider />
         <MagneticProvider />
         <CustomCursor />
         <FloatingNavbar />
-        {children}
+        <div className="flex-1">{children}</div>
+        <SiteFooter />
       </body>
     </html>
   );

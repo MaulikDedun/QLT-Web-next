@@ -15,7 +15,7 @@ export default async function PortfolioCaseStudyPage({ params }: PortfolioCaseSt
   return (
     <main className="px-6 pt-28 pb-16 md:px-12">
       <section className="mx-auto max-w-6xl">
-        <Link href="/portfolio" className="text-sm text-[#6b6b6b]">
+        <Link href="/portfolio" className="text-hover-link text-sm text-[#6b6b6b]">
           Back to Portfolio
         </Link>
         <h1 className="mt-5 max-w-4xl text-5xl leading-[0.95] font-semibold md:text-7xl">{project.title}</h1>
@@ -24,7 +24,7 @@ export default async function PortfolioCaseStudyPage({ params }: PortfolioCaseSt
 
       <section className="mx-auto mt-14 max-w-6xl space-y-6">
         {["Challenge", "Process", "Solution", "Result"].map((item) => (
-          <article key={item} className="rounded-3xl border border-black/10 bg-[#f3f3f3] p-7 md:p-9">
+          <article key={item} className="rounded-3xl border border-black/10 bg-[var(--bg-secondary)] p-7 md:p-9">
             <p className="text-xs uppercase tracking-[0.2em] text-[#6b6b6b]">{item}</p>
             <p className="mt-3 max-w-3xl text-lg">
               Cinematic storytelling block for {item.toLowerCase()} with motion-ready layout and premium editorial spacing.

@@ -1,13 +1,15 @@
 @import "tailwindcss";
 
 :root {
-  --bg-primary: #ffffff;
-  --bg-secondary: #f3f3f3;
-  --bg-dark: #0d0d0d;
-  --text-primary: #111111;
-  --text-secondary: #6b6b6b;
-  --accent-gray: #9e9e9e;
-  --border-soft: rgba(0, 0, 0, 0.08);
+  --bg-primary: #f7f6ff;
+  --bg-secondary: #eef2ff;
+  --bg-dark: #070a12;
+  --text-primary: #0b1220;
+  --text-secondary: #5b6476;
+  --accent-gray: #6d28d9;
+  --border-soft: rgba(11, 18, 32, 0.12);
+  --accent-cyan: #06b6d4;
+  --accent-purple: #6d28d9;
   --easing-premium: cubic-bezier(0.76, 0, 0.24, 1);
 }
 
@@ -36,7 +38,7 @@ body {
 }
 
 .section-shell {
-  border: 1px solid rgba(255, 255, 255, 0.18);
+  border: 1px solid rgba(255, 255, 255, 0.16);
   border-radius: 2rem;
   background:
     radial-gradient(
@@ -44,7 +46,8 @@ body {
       rgba(255, 255, 255, 0.04),
       rgba(255, 255, 255, 0)
     ),
-    #121212;
+    linear-gradient(180deg, rgba(109, 40, 217, 0.18), rgba(6, 182, 212, 0.08)),
+    var(--bg-dark);
 }
 
 .noise-overlay {
@@ -66,5 +69,143 @@ body {
     transform 0.5s var(--easing-premium),
     box-shadow 0.5s var(--easing-premium),
     background-color 0.5s var(--easing-premium);
+  will-change: transform;
+}
+
+.text-hover-link {
+  position: relative;
+  display: inline-block;
+  border-top: 1px solid transparent;
+  border-bottom: 1px solid currentColor;
+  padding: 2px 0;
+  letter-spacing: 0.02em;
+  text-decoration: none;
+  transition:
+    letter-spacing 240ms var(--easing-premium),
+    border-color 240ms var(--easing-premium),
+    opacity 240ms var(--easing-premium);
+}
+
+.text-hover-link::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: -1px;
+  width: 100%;
+  height: 1px;
+  background: currentColor;
+  transform: scaleX(0.18);
+  transform-origin: left center;
+  transition: transform 280ms var(--easing-premium);
+  opacity: 0.85;
+}
+
+.text-hover-link:hover::after,
+.text-hover-link:focus-visible::after {
+  transform: scaleX(1);
+}
+
+.text-hover-link:hover,
+.text-hover-link:focus-visible {
+  letter-spacing: 0.12em;
+  border-top-color: currentColor;
+  opacity: 1;
+}
+
+.btn-flip {
+  --btn-front-bg: #0f172a;
+  --btn-front-text: #e5e7eb;
+  --btn-back-bg: #e5e7eb;
+  --btn-back-text: #0f172a;
+  --btn-border: rgba(255, 255, 255, 0.34);
+  position: relative;
+  display: inline-block;
+  min-width: 170px;
+  height: 44px;
+  perspective: 700px;
+  text-decoration: none;
+  border-radius: 999px;
+  border: 1px solid var(--btn-border);
+  overflow: hidden;
+}
+
+.btn-flip::before,
+.btn-flip::after {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  font-size: 11px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  font-weight: 600;
+  transition:
+    transform 360ms var(--easing-premium),
+    opacity 360ms var(--easing-premium),
+    letter-spacing 240ms var(--easing-premium);
+  transform-style: preserve-3d;
+  backface-visibility: hidden;
+}
+
+.btn-flip::before {
+  content: attr(data-front);
+  background: var(--btn-front-bg);
+  color: var(--btn-front-text);
+  opacity: 1;
+  transform: translateY(0) rotateX(0);
+}
+
+.btn-flip::after {
+  content: attr(data-back);
+  background: var(--btn-back-bg);
+  color: var(--btn-back-text);
+  opacity: 0;
+  transform: translateY(-45%) rotateX(90deg);
+}
+
+.btn-flip:hover::before,
+.btn-flip:focus-visible::before {
+  opacity: 0;
+  transform: translateY(45%) rotateX(-90deg);
+  letter-spacing: 0.2em;
+}
+
+.btn-flip:hover::after,
+.btn-flip:focus-visible::after {
+  opacity: 1;
+  transform: translateY(0) rotateX(0);
+  letter-spacing: 0.18em;
+}
+
+.btn-flip-light {
+  --btn-front-bg: #ffffff;
+  --btn-front-text: #0f172a;
+  --btn-back-bg: #0f172a;
+  --btn-back-text: #ffffff;
+  --btn-border: rgba(15, 23, 42, 0.2);
+}
+
+/* Tech Stack Icons: remove tile/background so only the logo shows */
+.stack-icon-clean svg rect,
+.stack-icon-clean svg path[fill^="#"] + rect {
+  fill: transparent !important;
+}
+
+.stack-icon-clean svg {
+  background: transparent !important;
+}
+
+@keyframes rotate-slow {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+.fx-rotate-slow {
+  animation: rotate-slow 12s linear infinite;
+  transform-origin: center;
   will-change: transform;
 }

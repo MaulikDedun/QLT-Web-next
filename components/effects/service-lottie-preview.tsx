@@ -2,11 +2,14 @@
 
 import { AnimatePresence, motion } from "framer-motion";
 import Lottie from "lottie-react";
+import Image from "next/image";
 
 type ServiceLottiePreviewProps = {
   serviceSlug: string;
   service: string;
   note: string;
+  previewImageUrl: string;
+  previewGifUrl: string;
 };
 
 const createLottie = (size: number, stroke: number, spin: number) => ({
@@ -59,7 +62,7 @@ const serviceAnimations: Record<string, unknown> = {
   "growth-marketing": createLottie(294, 2.4, 540),
 };
 
-export function ServiceLottiePreview({ serviceSlug, service, note }: ServiceLottiePreviewProps) {
+export function ServiceLottiePreview({ serviceSlug, service, note, previewImageUrl, previewGifUrl }: ServiceLottiePreviewProps) {
   const animationData = serviceAnimations[serviceSlug] ?? serviceAnimations["saas-development"];
   return (
     <AnimatePresence mode="wait">
@@ -71,13 +74,27 @@ export function ServiceLottiePreview({ serviceSlug, service, note }: ServiceLott
         transition={{ duration: 0.45, ease: [0.76, 0, 0.24, 1] }}
       >
         <p className="text-xs uppercase tracking-[0.2em] text-white/50">Live Preview</p>
-        <div className="mt-8 grid h-60 place-items-center rounded-2xl border border-white/10 bg-gradient-to-br from-white/5 to-transparent">
-          <div className="h-44 w-44">
-            <Lottie animationData={animationData} loop />
+        <h3 className="mt-3 text-2xl leading-tight md:text-3xl">{service}</h3>
+        <p className="mt-2 max-w-xl text-sm text-white/65">{note}</p>
+        <div className="relative mt-7 h-72 overflow-hidden rounded-2xl border border-white/10 bg-gradient-to-br from-white/5 to-transparent">
+          <Image src={previewImageUrl} alt={service} fill sizes="(max-width: 768px) 100vw, 45vw" className="object-cover opacity-35" />
+          <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-black/10 to-transparent" />
+          <div className="relative z-10 grid h-full place-items-center">
+            <div className="h-44 w-44">
+              <Lottie animationData={animationData} loop />
+            </div>
+          </div>
+          <div className="absolute inset-x-0 bottom-0 h-24 overflow-hidden border-t border-white/15 bg-black/55">
+            <Image
+              src={previewGifUrl}
+              alt={`${service} live gif`}
+              fill
+              sizes="(max-width: 768px) 100vw, 45vw"
+              className="object-cover opacity-90"
+              unoptimized
+            />
           </div>
         </div>
-        <p className="mt-6 text-xl">{service}</p>
-        <p className="mt-2 text-sm text-white/65">{note}</p>
       </motion.div>
     </AnimatePresence>
   );
