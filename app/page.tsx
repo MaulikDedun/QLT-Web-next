@@ -5,6 +5,7 @@ import Image from "next/image";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import Link from "next/link";
+import Lottie from "lottie-react";
 import { useEffect, useMemo, useRef, useState } from "react";
 import StackIcon, { type IconName } from "tech-stack-icons";
 import { AmbientCanvas } from "@/components/effects/ambient-canvas";
@@ -18,12 +19,114 @@ import { projects, processSteps, insightPosts, type EditorialPost, services } fr
 
 gsap.registerPlugin(ScrollTrigger);
 
+const createHeroSolverLottie = () => ({
+  v: "5.7.6",
+  fr: 60,
+  ip: 0,
+  op: 240,
+  w: 500,
+  h: 500,
+  nm: "hero-solver",
+  ddd: 0,
+  assets: [],
+  layers: [
+    {
+      ddd: 0,
+      ind: 1,
+      ty: 4,
+      nm: "ring-1",
+      sr: 1,
+      ks: {
+        o: { a: 0, k: 60 },
+        r: { a: 1, k: [{ t: 0, s: [0] }, { t: 240, s: [360] }] },
+        p: { a: 0, k: [250, 250, 0] },
+        a: { a: 0, k: [0, 0, 0] },
+        s: { a: 0, k: [100, 100, 100] },
+      },
+      shapes: [
+        {
+          ty: "gr",
+          it: [
+            { ty: "el", p: { a: 0, k: [0, 0] }, s: { a: 0, k: [330, 330] }, nm: "Ellipse Path 1" },
+            { ty: "st", c: { a: 0, k: [0.05, 0.05, 0.05, 1] }, o: { a: 0, k: 100 }, w: { a: 0, k: 2.4 } },
+            { ty: "tr", p: { a: 0, k: [0, 0] }, a: { a: 0, k: [0, 0] }, s: { a: 0, k: [100, 100] } },
+          ],
+          nm: "Ellipse 1",
+        },
+      ],
+      ao: 0,
+      ip: 0,
+      op: 240,
+      st: 0,
+    },
+    {
+      ddd: 0,
+      ind: 2,
+      ty: 4,
+      nm: "ring-2",
+      sr: 1,
+      ks: {
+        o: { a: 0, k: 45 },
+        r: { a: 1, k: [{ t: 0, s: [0] }, { t: 240, s: [-520] }] },
+        p: { a: 0, k: [250, 250, 0] },
+        a: { a: 0, k: [0, 0, 0] },
+        s: { a: 0, k: [100, 100, 100] },
+      },
+      shapes: [
+        {
+          ty: "gr",
+          it: [
+            { ty: "el", p: { a: 0, k: [0, 0] }, s: { a: 0, k: [270, 270] }, nm: "Ellipse Path 1" },
+            { ty: "st", c: { a: 0, k: [0.05, 0.05, 0.05, 1] }, o: { a: 0, k: 100 }, w: { a: 0, k: 1.8 } },
+            { ty: "tr", p: { a: 0, k: [0, 0] }, a: { a: 0, k: [0, 0] }, s: { a: 0, k: [100, 100] } },
+          ],
+          nm: "Ellipse 1",
+        },
+      ],
+      ao: 0,
+      ip: 0,
+      op: 240,
+      st: 0,
+    },
+    {
+      ddd: 0,
+      ind: 3,
+      ty: 4,
+      nm: "ring-3",
+      sr: 1,
+      ks: {
+        o: { a: 0, k: 30 },
+        r: { a: 1, k: [{ t: 0, s: [0] }, { t: 240, s: [780] }] },
+        p: { a: 0, k: [250, 250, 0] },
+        a: { a: 0, k: [0, 0, 0] },
+        s: { a: 0, k: [100, 100, 100] },
+      },
+      shapes: [
+        {
+          ty: "gr",
+          it: [
+            { ty: "el", p: { a: 0, k: [0, 0] }, s: { a: 0, k: [210, 210] }, nm: "Ellipse Path 1" },
+            { ty: "st", c: { a: 0, k: [0.05, 0.05, 0.05, 1] }, o: { a: 0, k: 100 }, w: { a: 0, k: 1.4 } },
+            { ty: "tr", p: { a: 0, k: [0, 0] }, a: { a: 0, k: [0, 0] }, s: { a: 0, k: [100, 100] } },
+          ],
+          nm: "Ellipse 1",
+        },
+      ],
+      ao: 0,
+      ip: 0,
+      op: 240,
+      st: 0,
+    },
+  ],
+});
+
 export default function Home() {
   const heroRef = useRef<HTMLElement>(null);
   const [activeService, setActiveService] = useState(services[0]);
   const [activeStep, setActiveStep] = useState(0);
   const [showDemo, setShowDemo] = useState(false);
   const [activePost, setActivePost] = useState<EditorialPost | null>(null);
+  const heroSolverLottie = useMemo(() => createHeroSolverLottie(), []);
 
   useEffect(() => {
     const trigger = gsap.to(".hero-title", {
@@ -72,70 +175,149 @@ export default function Home() {
 
   return (
     <main className="bg-white pt-20">
-      <section ref={heroRef} className="noise-overlay relative min-h-[95vh] overflow-hidden px-6 py-20 md:px-12">
-        <div className="pointer-events-none absolute inset-0">
-          <Image
-            src="https://images.unsplash.com/photo-1451187580459-43490279c0fa?q=80&w=1920&auto=format&fit=crop"
-            alt=""
-            fill
-            sizes="100vw"
-            className="object-cover opacity-25"
-            priority
-          />
-          <div className="absolute inset-0 bg-gradient-to-b from-[#0b1020]/25 via-transparent to-[#070a12]/18" />
-        </div>
-        <AmbientCanvas />
-        <div className="relative mx-auto flex max-w-6xl flex-col gap-10">
-          <motion.p
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.9 }}
-            className="text-xs tracking-[0.24em] uppercase text-[var(--text-secondary)]"
-          >
-            QuantaTechLabs - Cinematic Product Systems
-          </motion.p>
-          <SplitReveal
-            text="Designing digital products that scale with cinematic precision."
-            className="hero-title max-w-5xl text-5xl leading-[0.95] font-semibold tracking-tight md:text-8xl"
-          />
-          <p className="max-w-2xl text-lg text-[var(--text-secondary)] md:text-xl">
-            Modern SaaS systems, immersive web experiences, and product ecosystems built for growth.
-          </p>
-          <div className="flex flex-wrap gap-4">
-            <button
-              className="btn-flip btn-flip-light magnetic w-full sm:w-auto"
-              data-front="Start a project"
-              data-back="Talk with us"
-              data-cursor="Open"
-              data-magnetic
-            >
-              Start a Project
-            </button>
-            <Link
-              href="/portfolio"
-              className="btn-flip magnetic w-full sm:w-auto"
-              data-front="View work"
-              data-back="Case studies"
-              data-cursor="View"
-              data-magnetic
-            >
-              View Work
-            </Link>
-          </div>
-        </div>
-      </section>
+      <section
+  ref={heroRef}
+  className="noise-overlay relative min-h-[95vh] overflow-hidden px-6 py-20 md:px-12"
+>
+  <div className="pointer-events-none absolute inset-0">
+    <video
+      autoPlay
+      muted
+      loop
+      playsInline
+      className="absolute inset-0 h-full w-full object-cover opacity-45"
+    >
+      <source
+        src="YOUR_VIDEO_LINK_HERE"
+        type="video/mp4"
+      />
+    </video>
 
-      <section className="overflow-hidden border-y border-black/10 bg-[var(--bg-secondary)] py-5">
-        <motion.div
-          className="flex gap-8 whitespace-nowrap text-sm uppercase tracking-[0.14em] text-black/70"
-          animate={{ x: ["0%", "-50%"] }}
-          transition={{ duration: 20, ease: "linear", repeat: Number.POSITIVE_INFINITY }}
+    <div className="absolute inset-0 bg-gradient-to-b from-[#0a0814]/35 via-[#120f24]/72 to-[#070b14]/92" />
+
+    <div className="absolute inset-0 bg-[radial-gradient(circle_at_20%_25%,rgba(139,92,246,0.22),transparent_40%),radial-gradient(circle_at_80%_30%,rgba(34,211,238,0.10),transparent_42%),radial-gradient(circle_at_50%_80%,rgba(168,85,247,0.18),transparent_48%)]" />
+
+    <div className="absolute inset-0 backdrop-blur-[1px]" />
+  </div>
+
+  <AmbientCanvas />
+
+  <div className="relative mx-auto max-w-6xl">
+    <div className="pointer-events-none absolute -right-10 top-6 hidden h-[520px] w-[520px] opacity-35 md:block">
+      <motion.div
+        initial={{ opacity: 0, scale: 0.95 }}
+        animate={{ opacity: 1, scale: 1 }}
+        transition={{ duration: 0.9, ease: [0.76, 0, 0.24, 1] }}
+        className="h-full w-full"
+      >
+        <div className="absolute inset-0 rounded-full bg-[radial-gradient(circle_at_30%_30%,rgba(34,211,238,0.20),transparent_55%),radial-gradient(circle_at_70%_40%,rgba(168,85,247,0.18),transparent_60%)] blur-2xl" />
+
+        <div className="relative h-full w-full mix-blend-screen">
+          <Lottie animationData={heroSolverLottie} loop />
+        </div>
+      </motion.div>
+    </div>
+
+    <div className="relative max-w-4xl">
+      <motion.div
+        initial={{ opacity: 0, y: 10 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.55, ease: [0.76, 0, 0.24, 1] }}
+        className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/[0.06] px-4 py-2 text-xs font-semibold uppercase tracking-[0.22em] text-white/65 shadow-[0_18px_55px_rgba(11,18,32,0.22)] backdrop-blur-xl"
+      >
+        <span
+          className="h-2 w-2 rounded-full bg-gradient-to-r from-cyan-400 to-violet-400"
+          aria-hidden
+        />
+        We solve product chaos
+      </motion.div>
+
+      <SplitReveal
+        text="From messy flows → crisp systems."
+        className="hero-title mt-8 max-w-4xl text-6xl leading-[0.9] font-semibold tracking-tight text-white md:text-8xl"
+      />
+
+      <motion.p
+        initial={{ opacity: 0, y: 10 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.55, delay: 0.06 }}
+        className="mt-6 max-w-2xl text-xl text-white/70 md:text-2xl"
+      >
+        We design and build websites and SaaS products that feel
+        effortless—because the system underneath is engineered.
+      </motion.p>
+
+      <motion.div
+        initial={{ opacity: 0, y: 10 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.55, delay: 0.12 }}
+        className="mt-10 flex flex-col gap-4 sm:flex-row sm:items-center"
+      >
+        <Link
+          href="/contact"
+          className="magnetic inline-flex items-center justify-center rounded-full bg-gradient-to-r from-violet-500 to-cyan-500 px-8 py-4 text-base font-semibold tracking-tight text-white shadow-[0_18px_60px_rgba(76,29,149,0.35)] transition-transform hover:-translate-y-0.5"
+          data-cursor="Open"
+          data-magnetic
         >
-          {[...marquee, ...marquee].map((item, index) => (
-            <span key={`${item}-${index}`}>{item}</span>
-          ))}
-        </motion.div>
-      </section>
+          Start a Project
+        </Link>
+
+        <Link
+          href="/portfolio"
+          className="magnetic inline-flex items-center justify-center rounded-full border border-white/10 bg-white/[0.06] px-8 py-4 text-base font-semibold tracking-tight text-white/85 shadow-[0_18px_55px_rgba(11,18,32,0.20)] backdrop-blur-xl transition-transform hover:-translate-y-0.5"
+          data-cursor="View"
+          data-magnetic
+        >
+          See proof
+          <span className="ml-2 text-white/40" aria-hidden>
+            →
+          </span>
+        </Link>
+      </motion.div>
+
+      <motion.div
+        initial={{ opacity: 0, y: 14 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.6, delay: 0.18 }}
+        className="mt-10 flex flex-wrap gap-3"
+      >
+        {[
+          ["Audit", "Find the friction"],
+          ["Design", "Systemize the UI"],
+          ["Build", "Ship with motion"],
+          ["Optimize", "Scale conversion"],
+        ].map(([k, v], idx) => (
+          <motion.div
+            key={k}
+            whileHover={{ y: -4 }}
+            transition={{
+              type: "spring",
+              stiffness: 260,
+              damping: 18,
+            }}
+            className="group rounded-full border border-white/10 bg-white/[0.06] px-4 py-3 shadow-[0_18px_55px_rgba(11,18,32,0.14)] backdrop-blur-xl"
+          >
+            <div className="flex items-center gap-3">
+              <span className="grid h-7 w-7 place-items-center rounded-full bg-white/10 text-xs font-semibold text-white/60">
+                0{idx + 1}
+              </span>
+
+              <div className="leading-tight">
+                <p className="text-sm font-semibold tracking-tight text-white">
+                  {k}
+                </p>
+
+                <p className="text-xs text-white/50">
+                  {v}
+                </p>
+              </div>
+            </div>
+          </motion.div>
+        ))}
+      </motion.div>
+    </div>
+  </div>
+</section>
 
       <section className="relative min-h-[92vh] w-full overflow-hidden bg-[#070a12] px-6 py-14 text-white md:px-12">
         <div className="pointer-events-none absolute inset-0">
