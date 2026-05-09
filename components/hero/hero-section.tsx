@@ -19,8 +19,8 @@ function MagneticGrid() {
     const ctx = canvas.getContext("2d");
     if (!ctx) return;
 
-    const COLS = 28;
-    const ROWS = 16;
+    const COLS = 38;
+    const ROWS = 26;
     let W = 0, H = 0;
     let gx = 0, gy = 0; // grid cell size
 
@@ -51,7 +51,7 @@ function MagneticGrid() {
       const mx = mouse.current.x;
       const my = mouse.current.y;
       const RADIUS = 180;
-      const STRENGTH = 38;
+      const STRENGTH = 68;
       const SPRING = 0.08;
       const DAMP = 0.72;
 
