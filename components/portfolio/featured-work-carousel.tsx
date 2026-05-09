@@ -1,235 +1,239 @@
 "use client";
 
-import { motion, useMotionValue, useReducedMotion } from "framer-motion";
+import { AnimatePresence, motion, useMotionValue, useReducedMotion } from "framer-motion";
 import Image from "next/image";
 import Link from "next/link";
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import type { ProjectItem } from "@/lib/site-data";
 
-type FeaturedWorkCarouselProps = {
-  items: ProjectItem[];
-};
+type Props = { items: ProjectItem[]; intervalMs?: number };
 
-function clamp(v: number, min: number, max: number) {
-  return Math.min(max, Math.max(min, v));
+function clamp(v: number, lo: number, hi: number) {
+  return Math.min(hi, Math.max(lo, v));
 }
 
-type ProjectSlideProps = {
-  item: ProjectItem;
-  index: number;
-  active: number;
-  stepPx: number;
-  onActivate: (index: number) => void;
-};
-
-function ProjectSlide({ item, index, active, stepPx, onActivate }: ProjectSlideProps) {
-  const isActive = index === active;
-
-  return (
-    <motion.article
-      className="noise-overlay relative shrink-0 overflow-hidden rounded-3xl border border-white/15 bg-[radial-gradient(circle_at_20%_20%,rgba(255,255,255,0.06),rgba(255,255,255,0)),linear-gradient(180deg,rgba(109,40,217,0.16),rgba(6,182,212,0.06)),#070a12]"
-      style={{ width: stepPx }}
-      animate={{
-        scale: isActive ? 1 : 0.94,
-        y: isActive ? 0 : 10,
-        opacity: isActive ? 1 : 0.62,
-        filter: isActive ? "blur(0px)" : "blur(0.6px)",
-      }}
-      transition={{ duration: 0.55, ease: [0.76, 0, 0.24, 1] }}
-      onClick={() => onActivate(index)}
-      role="button"
-      tabIndex={0}
-      onKeyDown={(e) => {
-        if (e.key === "Enter" || e.key === " ") onActivate(index);
-        if (e.key === "ArrowRight") onActivate(active + 1);
-        if (e.key === "ArrowLeft") onActivate(active - 1);
-      }}
-      data-cursor="Explore"
-    >
-      <div
-        className={`pointer-events-none absolute inset-0 opacity-0 transition-opacity duration-500 ease-out ${
-          isActive ? "opacity-100" : ""
-        }`}
-        aria-hidden
-      >
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_30%_20%,rgba(6,182,212,0.16),transparent_55%),radial-gradient(circle_at_70%_80%,rgba(109,40,217,0.12),transparent_55%)]" />
-      </div>
-
-      <div className="relative h-64 md:h-[24rem]">
-        <Image src={item.coverImageUrl} alt={item.title} fill sizes="(max-width: 768px) 92vw, 900px" className="object-cover" />
-        <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/25 to-transparent" />
-      </div>
-
-      <div className="absolute inset-x-0 bottom-0 p-6 md:p-8">
-        <p className="text-xs uppercase tracking-[0.2em] text-white/60">Case Study</p>
-        <h3 className="mt-2 text-2xl md:text-3xl">{item.title}</h3>
-        <p className="mt-3 max-w-2xl text-sm text-white/75">{item.summary}</p>
-        <ul className="mt-5 flex flex-wrap gap-2 text-xs text-white/75">
-          {item.highlights.slice(0, 3).map((h) => (
-            <li key={h} className="rounded-full border border-white/15 bg-black/20 px-3 py-1">
-              {h}
-            </li>
-          ))}
-        </ul>
-        <div className="mt-6 flex flex-wrap items-center gap-4">
-          <Link
-            href={`/portfolio/${item.slug}`}
-            className="group/cta inline-flex items-center gap-2 rounded-full border border-white/25 bg-white/10 px-5 py-2 text-sm text-white backdrop-blur transition-all duration-300 hover:-translate-y-0.5 hover:border-cyan-200/50 hover:bg-gradient-to-r hover:from-cyan-300/20 hover:via-white/10 hover:to-purple-300/20 hover:shadow-[0_14px_40px_rgba(6,182,212,0.18)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan-200/40"
-            data-cursor="Open"
-          >
-            <span>View Case Study</span>
-            <span className="grid h-6 w-6 place-items-center rounded-full border border-white/20 bg-black/20 text-white/80 transition-all duration-300 group-hover/cta:translate-x-0.5 group-hover/cta:border-cyan-200/60 group-hover/cta:bg-cyan-300/15 group-hover/cta:text-cyan-50">
-              →
-            </span>
-          </Link>
-          <span className="text-xs text-white/55">Drag or use arrows to browse.</span>
-        </div>
-      </div>
-    </motion.article>
-  );
-}
-
-export function FeaturedWorkCarousel({ items }: FeaturedWorkCarouselProps) {
-  const trackRef = useRef<HTMLDivElement>(null);
-  const x = useMotionValue(0);
+export function FeaturedWorkCarousel({ items, intervalMs = 4800 }: Props) {
   const [active, setActive] = useState(0);
-  const [stepPx, setStepPx] = useState(920);
-  const dragStartX = useRef(0);
-  const shouldReduceMotion = useReducedMotion();
-  const [paused, setPaused] = useState(false);
+  const [dir, setDir] = useState(1); // 1 = forward, -1 = backward
+  const [hovered, setHovered] = useState(false);
+  const paused = useRef(false);
+  const reduced = useReducedMotion();
 
-  const maxIndex = Math.max(0, items.length - 1);
+  const max = items.length - 1;
 
+  function go(next: number, direction?: number) {
+    const clamped = clamp(next, 0, max);
+    setDir(direction ?? (next > active ? 1 : -1));
+    setActive(clamped);
+  }
+
+  function goWrap(next: number) {
+    const wrapped = ((next % items.length) + items.length) % items.length;
+    setDir(next > active ? 1 : -1);
+    setActive(wrapped);
+  }
+
+  // autoscroll
   useEffect(() => {
-    const element = trackRef.current;
-    if (!element) return;
+    if (reduced || items.length <= 1) return;
+    const id = setInterval(() => {
+      if (!paused.current) {
+        setDir(1);
+        setActive((v) => (v + 1) % items.length);
+      }
+    }, intervalMs);
+    return () => clearInterval(id);
+  }, [items.length, intervalMs, reduced]);
 
-    const compute = () => {
-      // Keep the hero card smaller so the section doesn't feel "too big".
-      // 84vw on mobile/tablet, ~780px on desktop.
-      const w = element.clientWidth;
-      const next = clamp(Math.round(w * 0.84), 320, 820);
-      setStepPx(next);
-    };
+  const item = items[active];
 
-    compute();
-    const ro = new ResizeObserver(compute);
-    ro.observe(element);
-    return () => ro.disconnect();
-  }, []);
-
-  const dragBounds = useMemo(() => {
-    // We center the active slide by translating the track. Boundaries prevent overscroll.
-    const left = -maxIndex * stepPx;
-    return { left, right: 0 };
-  }, [maxIndex, stepPx]);
-
-  useEffect(() => {
-    x.set(-active * stepPx);
-  }, [active, stepPx, x]);
-
-  const goTo = (index: number) => {
-    setActive(clamp(index, 0, maxIndex));
+  // slide variants — no blur, clean translate
+  const variants = {
+    enter: (d: number) => ({ x: d > 0 ? 60 : -60, opacity: 0 }),
+    center: { x: 0, opacity: 1 },
+    exit: (d: number) => ({ x: d > 0 ? -60 : 60, opacity: 0 }),
   };
 
-  useEffect(() => {
-    if (shouldReduceMotion) return;
-    if (paused) return;
-    if (items.length <= 1) return;
-
-    const id = window.setInterval(() => {
-      setActive((v) => (v + 1) % items.length);
-    }, 5200);
-
-    return () => window.clearInterval(id);
-  }, [items.length, paused, shouldReduceMotion]);
-
   return (
-    <div
-      className="mt-10"
-      onMouseEnter={() => setPaused(true)}
-      onMouseLeave={() => setPaused(false)}
-      onFocusCapture={() => setPaused(true)}
-      onBlurCapture={() => setPaused(false)}
-    >
-      <div className="flex items-center justify-between gap-4">
-        <div className="text-xs uppercase tracking-[0.2em] text-white/55">
-          <span className="text-white/80">0{active + 1}</span>
-          <span className="mx-2 text-white/30">/</span>
-          <span className="text-white/55">0{items.length}</span>
-        </div>
-
-        <div className="flex items-center gap-2">
-          <button
-            type="button"
-            onClick={() => goTo(active - 1)}
-            disabled={active === 0}
-            className="grid h-10 w-10 place-items-center rounded-full border border-white/15 bg-white/5 text-white/80 transition-all enabled:hover:border-white/25 enabled:hover:bg-white/10 disabled:cursor-not-allowed disabled:opacity-40"
-            aria-label="Previous project"
-            data-cursor="Prev"
+    <div className="mt-12 select-none">
+      {/* ── main stage ─────────────────────────────────────────────────────── */}
+      <div
+        className="group relative overflow-hidden rounded-[2rem] border border-white/10 bg-[#0b0e17]"
+        style={{ minHeight: 480 }}
+        onMouseEnter={() => { paused.current = true; setHovered(true); }}
+        onMouseLeave={() => { paused.current = false; setHovered(false); }}
+      >
+        <AnimatePresence custom={dir} mode="wait">
+          <motion.div
+            key={item.slug}
+            custom={dir}
+            variants={variants}
+            initial="enter"
+            animate="center"
+            exit="exit"
+            transition={{ duration: 0.48, ease: [0.76, 0, 0.24, 1] }}
+            className="absolute inset-0"
           >
-            ←
-          </button>
-          <button
-            type="button"
-            onClick={() => goTo(active + 1)}
-            disabled={active === maxIndex}
-            className="grid h-10 w-10 place-items-center rounded-full border border-white/15 bg-white/5 text-white/80 transition-all enabled:hover:border-cyan-200/40 enabled:hover:bg-cyan-300/10 enabled:hover:text-cyan-50 disabled:cursor-not-allowed disabled:opacity-40"
-            aria-label="Next project"
-            data-cursor="Next"
-          >
-            →
-          </button>
-        </div>
-      </div>
-
-      <div className="relative mt-5 overflow-hidden" ref={trackRef}>
-        <div className="pointer-events-none absolute left-0 top-0 z-10 hidden h-full w-16 bg-gradient-to-r from-[#070a12] to-transparent md:block" />
-        <div className="pointer-events-none absolute right-0 top-0 z-10 hidden h-full w-16 bg-gradient-to-l from-[#070a12] to-transparent md:block" />
-
-        <motion.div
-          className="flex gap-6"
-          style={{ x }}
-          drag="x"
-          dragConstraints={dragBounds}
-          dragElastic={0.06}
-          onDragStart={() => {
-            dragStartX.current = x.get();
-            setPaused(true);
-          }}
-          onDragEnd={(_, info) => {
-            // PRD-like snap: bias with velocity and displacement, then clamp.
-            const current = -dragStartX.current / stepPx;
-            const displacement = -(x.get() - dragStartX.current) / stepPx;
-            const velocityBias = -info.velocity.x / 1800;
-            const next = clamp(Math.round(current + displacement + velocityBias), 0, maxIndex);
-            goTo(next);
-            window.setTimeout(() => setPaused(false), 900);
-          }}
-          animate={{ x: -active * stepPx }}
-          transition={{ duration: 0.65, ease: [0.76, 0, 0.24, 1] }}
-        >
-          {items.map((item, index) => (
-            <ProjectSlide
-              key={item.slug}
-              item={item}
-              index={index}
-              active={active}
-              stepPx={stepPx}
-              onActivate={goTo}
+            {/* cover */}
+            <Image
+              src={item.coverImageUrl}
+              alt={item.title}
+              fill
+              sizes="(max-width: 768px) 100vw, 1200px"
+              className="object-cover"
+              priority
             />
-          ))}
-        </motion.div>
+
+            {/* base scrim — always present */}
+            <div className="absolute inset-0 bg-gradient-to-t from-[#070a12] via-[#070a12]/55 to-transparent" />
+
+            {/* cyan scan-line sweep on hover */}
+            <motion.div
+              className="pointer-events-none absolute inset-0"
+              initial={false}
+              animate={hovered ? { opacity: 1 } : { opacity: 0 }}
+              transition={{ duration: 0.35 }}
+            >
+              <div className="absolute inset-0 bg-[linear-gradient(180deg,transparent_0%,rgba(6,182,212,0.06)_50%,transparent_100%)] bg-[size:100%_200%] animate-[scanline_2.4s_ease-in-out_infinite]" />
+              <div className="absolute inset-x-0 bottom-0 h-px bg-gradient-to-r from-transparent via-cyan-400/40 to-transparent" />
+            </motion.div>
+
+            {/* corner accent — top-right */}
+            <div className="absolute right-6 top-6 flex items-center gap-2 rounded-full border border-white/10 bg-black/30 px-3 py-1.5 backdrop-blur-md">
+              <span className="h-1.5 w-1.5 rounded-full bg-cyan-400" />
+              <span className="text-[10px] uppercase tracking-[0.22em] text-white/55">Case Study</span>
+            </div>
+          </motion.div>
+        </AnimatePresence>
+
+        {/* ── card content (stays in place, text crossfades) ── */}
+        <div className="relative flex h-full min-h-[480px] flex-col justify-end p-8 md:p-12">
+          <AnimatePresence custom={dir} mode="wait">
+            <motion.div
+              key={item.slug + "-text"}
+              custom={dir}
+              variants={{
+                enter: (d: number) => ({ y: d > 0 ? 24 : -24, opacity: 0 }),
+                center: { y: 0, opacity: 1 },
+                exit: (d: number) => ({ y: d > 0 ? -16 : 16, opacity: 0 }),
+              }}
+              initial="enter"
+              animate="center"
+              exit="exit"
+              transition={{ duration: 0.42, ease: [0.76, 0, 0.24, 1] }}
+            >
+              <h3 className="text-3xl leading-tight tracking-tight text-white md:text-5xl">
+                {item.title}
+              </h3>
+              <p className="mt-3 max-w-xl text-sm leading-relaxed text-white/65 md:text-base">
+                {item.summary}
+              </p>
+
+              <ul className="mt-5 flex flex-wrap gap-2">
+                {item.highlights.slice(0, 3).map((h) => (
+                  <li
+                    key={h}
+                    className="rounded-full border border-white/12 bg-white/[0.06] px-3 py-1 text-xs text-white/60 backdrop-blur-sm transition-colors duration-200 hover:border-cyan-300/30 hover:text-cyan-200"
+                  >
+                    {h}
+                  </li>
+                ))}
+              </ul>
+
+              <div className="mt-8">
+                <Link
+                  href={`/portfolio/${item.slug}`}
+                  className="group/cta inline-flex items-center gap-3 rounded-full border border-white/20 bg-white/[0.08] px-6 py-3 text-sm font-medium text-white backdrop-blur-md transition-all duration-300 hover:border-cyan-300/40 hover:bg-gradient-to-r hover:from-cyan-400/15 hover:to-violet-400/10 hover:shadow-[0_0_32px_rgba(6,182,212,0.18)]"
+                  data-cursor="Open"
+                >
+                  View Case Study
+                  <span className="grid h-6 w-6 place-items-center rounded-full border border-white/15 bg-white/10 text-xs transition-all duration-300 group-hover/cta:translate-x-0.5 group-hover/cta:border-cyan-300/50 group-hover/cta:bg-cyan-300/15 group-hover/cta:text-cyan-100">
+                    →
+                  </span>
+                </Link>
+              </div>
+            </motion.div>
+          </AnimatePresence>
+        </div>
+
+        {/* drag handler */}
+        <DragLayer onSwipe={(d) => goWrap(active + d)} />
       </div>
 
-      <div className="mt-6 h-1 w-full overflow-hidden rounded-full bg-white/10">
-        <motion.div
-          className="h-full rounded-full bg-gradient-to-r from-cyan-300/80 to-purple-300/80"
-          animate={{ width: `${items.length ? ((active + 1) / items.length) * 100 : 0}%` }}
-          transition={{ duration: 0.45, ease: [0.76, 0, 0.24, 1] }}
-        />
+      {/* ── controls ───────────────────────────────────────────────────────── */}
+      <div className="mt-6 flex items-center justify-between gap-4">
+        {/* dot nav */}
+        <div className="flex items-center gap-2">
+          {items.map((it, i) => (
+            <button
+              key={it.slug}
+              type="button"
+              onClick={() => go(i)}
+              aria-label={`Go to ${it.title}`}
+              className="group relative h-1 overflow-hidden rounded-full bg-white/15 transition-all duration-300"
+              style={{ width: i === active ? 32 : 12 }}
+            >
+              {i === active && (
+                <motion.div
+                  className="absolute inset-y-0 left-0 rounded-full bg-gradient-to-r from-cyan-300 to-violet-300"
+                  initial={{ width: "0%" }}
+                  animate={{ width: "100%" }}
+                  transition={{ duration: intervalMs / 1000, ease: "linear" }}
+                  key={active}
+                />
+              )}
+            </button>
+          ))}
+        </div>
+
+        {/* counter + arrows */}
+        <div className="flex items-center gap-4">
+          <span className="font-mono text-xs text-white/35">
+            <span className="text-white/70">0{active + 1}</span>
+            {" / "}
+            0{items.length}
+          </span>
+          <div className="flex gap-2">
+            <button
+              type="button"
+              onClick={() => go(active - 1, -1)}
+              disabled={active === 0}
+              aria-label="Previous"
+              className="grid h-9 w-9 place-items-center rounded-full border border-white/12 bg-white/[0.04] text-white/60 transition-all hover:border-white/25 hover:bg-white/10 hover:text-white disabled:cursor-not-allowed disabled:opacity-25"
+            >
+              ←
+            </button>
+            <button
+              type="button"
+              onClick={() => go(active + 1, 1)}
+              disabled={active === max}
+              aria-label="Next"
+              className="grid h-9 w-9 place-items-center rounded-full border border-white/12 bg-white/[0.04] text-white/60 transition-all hover:border-cyan-300/35 hover:bg-cyan-300/10 hover:text-cyan-100 disabled:cursor-not-allowed disabled:opacity-25"
+            >
+              →
+            </button>
+          </div>
+        </div>
       </div>
     </div>
   );
 }
 
+// ── thin invisible drag layer so the card is swipeable ──────────────────────
+function DragLayer({ onSwipe }: { onSwipe: (dir: number) => void }) {
+  const x = useMotionValue(0);
+  return (
+    <motion.div
+      className="absolute inset-0 cursor-grab active:cursor-grabbing"
+      style={{ x }}
+      drag="x"
+      dragConstraints={{ left: 0, right: 0 }}
+      dragElastic={0.12}
+      onDragEnd={(_, info) => {
+        if (info.offset.x < -50) onSwipe(1);
+        else if (info.offset.x > 50) onSwipe(-1);
+        x.set(0);
+      }}
+    />
+  );
+}
