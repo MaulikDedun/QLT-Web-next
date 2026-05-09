@@ -2,151 +2,24 @@
 
 import { AnimatePresence, motion } from "framer-motion";
 import Image from "next/image";
-import gsap from "gsap";
-import { ScrollTrigger } from "gsap/ScrollTrigger";
 import Link from "next/link";
-import Lottie from "lottie-react";
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import StackIcon, { type IconName } from "tech-stack-icons";
-import { AmbientCanvas } from "@/components/effects/ambient-canvas";
+import { HeroSection } from "@/components/hero/hero-section";
 import { ServiceLottiePreview } from "@/components/effects/service-lottie-preview";
 import { SplitReveal } from "@/components/effects/split-reveal";
 import { EditorialPostCard } from "@/components/editorial/editorial-post-card";
 import { EditorialPostModal } from "@/components/editorial/editorial-post-modal";
 import { FeaturedWorkCarousel } from "@/components/portfolio/featured-work-carousel";
-import { FeaturedWorkBackdrop } from "@/components/effects/featured-work-backdrop";
 import { projects, processSteps, insightPosts, type EditorialPost, services } from "@/lib/site-data";
 
 
-gsap.registerPlugin(ScrollTrigger);
-
-const createHeroSolverLottie = () => ({
-  v: "5.7.6",
-  fr: 60,
-  ip: 0,
-  op: 240,
-  w: 500,
-  h: 500,
-  nm: "hero-solver",
-  ddd: 0,
-  assets: [],
-  layers: [
-    {
-      ddd: 0,
-      ind: 1,
-      ty: 4,
-      nm: "ring-1",
-      sr: 1,
-      ks: {
-        o: { a: 0, k: 60 },
-        r: { a: 1, k: [{ t: 0, s: [0] }, { t: 240, s: [360] }] },
-        p: { a: 0, k: [250, 250, 0] },
-        a: { a: 0, k: [0, 0, 0] },
-        s: { a: 0, k: [100, 100, 100] },
-      },
-      shapes: [
-        {
-          ty: "gr",
-          it: [
-            { ty: "el", p: { a: 0, k: [0, 0] }, s: { a: 0, k: [330, 330] }, nm: "Ellipse Path 1" },
-            { ty: "st", c: { a: 0, k: [0.05, 0.05, 0.05, 1] }, o: { a: 0, k: 100 }, w: { a: 0, k: 2.4 } },
-            { ty: "tr", p: { a: 0, k: [0, 0] }, a: { a: 0, k: [0, 0] }, s: { a: 0, k: [100, 100] } },
-          ],
-          nm: "Ellipse 1",
-        },
-      ],
-      ao: 0,
-      ip: 0,
-      op: 240,
-      st: 0,
-    },
-    {
-      ddd: 0,
-      ind: 2,
-      ty: 4,
-      nm: "ring-2",
-      sr: 1,
-      ks: {
-        o: { a: 0, k: 45 },
-        r: { a: 1, k: [{ t: 0, s: [0] }, { t: 240, s: [-520] }] },
-        p: { a: 0, k: [250, 250, 0] },
-        a: { a: 0, k: [0, 0, 0] },
-        s: { a: 0, k: [100, 100, 100] },
-      },
-      shapes: [
-        {
-          ty: "gr",
-          it: [
-            { ty: "el", p: { a: 0, k: [0, 0] }, s: { a: 0, k: [270, 270] }, nm: "Ellipse Path 1" },
-            { ty: "st", c: { a: 0, k: [0.05, 0.05, 0.05, 1] }, o: { a: 0, k: 100 }, w: { a: 0, k: 1.8 } },
-            { ty: "tr", p: { a: 0, k: [0, 0] }, a: { a: 0, k: [0, 0] }, s: { a: 0, k: [100, 100] } },
-          ],
-          nm: "Ellipse 1",
-        },
-      ],
-      ao: 0,
-      ip: 0,
-      op: 240,
-      st: 0,
-    },
-    {
-      ddd: 0,
-      ind: 3,
-      ty: 4,
-      nm: "ring-3",
-      sr: 1,
-      ks: {
-        o: { a: 0, k: 30 },
-        r: { a: 1, k: [{ t: 0, s: [0] }, { t: 240, s: [780] }] },
-        p: { a: 0, k: [250, 250, 0] },
-        a: { a: 0, k: [0, 0, 0] },
-        s: { a: 0, k: [100, 100, 100] },
-      },
-      shapes: [
-        {
-          ty: "gr",
-          it: [
-            { ty: "el", p: { a: 0, k: [0, 0] }, s: { a: 0, k: [210, 210] }, nm: "Ellipse Path 1" },
-            { ty: "st", c: { a: 0, k: [0.05, 0.05, 0.05, 1] }, o: { a: 0, k: 100 }, w: { a: 0, k: 1.4 } },
-            { ty: "tr", p: { a: 0, k: [0, 0] }, a: { a: 0, k: [0, 0] }, s: { a: 0, k: [100, 100] } },
-          ],
-          nm: "Ellipse 1",
-        },
-      ],
-      ao: 0,
-      ip: 0,
-      op: 240,
-      st: 0,
-    },
-  ],
-});
-
 export default function Home() {
-  const heroRef = useRef<HTMLElement>(null);
   const [activeService, setActiveService] = useState(services[0]);
   const [activeStep, setActiveStep] = useState(0);
   const [showDemo, setShowDemo] = useState(false);
   const [activePost, setActivePost] = useState<EditorialPost | null>(null);
-  const heroSolverLottie = useMemo(() => createHeroSolverLottie(), []);
 
-  useEffect(() => {
-    const trigger = gsap.to(".hero-title", {
-      yPercent: -24,
-      opacity: 0.45,
-      scale: 0.96,
-      ease: "none",
-      scrollTrigger: { trigger: heroRef.current, scrub: true, start: "top top", end: "bottom top" },
-    });
-    return () => {
-      trigger.kill();
-      ScrollTrigger.getAll().forEach((item) => item.kill());
-    };
-  }, []);
-
-  const marquee = useMemo(
-    () => ["Next.js", "TypeScript", "Framer Motion", "GSAP", "React", "Three.js", "Node", "WebGL"],
-    [],
-  );
   const techStackLogos = useMemo<IconName[]>(
     () => [
       "nextjs",
@@ -162,144 +35,13 @@ export default function Home() {
     ],
     [],
   );
-  const processDotTrack = useMemo(
-    () => [
-      { left: "8%", top: "-14px" },
-      { left: "25%", top: "-9px" },
-      { left: "42%", top: "-6px" },
-      { left: "59%", top: "-8px" },
-      { left: "76%", top: "-11px" },
-      { left: "92%", top: "-13px" },
-    ],
-    [],
-  );
 
-  
+
 
   return (
-    <main className="bg-white pt-20">
+    <main className="bg-[#070a12] pt-20">
       {/*hero*/}
-      <section
-        ref={heroRef}
-        className="noise-overlay relative min-h-[95vh] overflow-hidden px-6 py-20 md:px-12"
-      >
-        <div className="pointer-events-none absolute inset-0">
-          <video
-            autoPlay
-            muted
-            loop
-            playsInline
-            className="absolute inset-0 h-full w-full object-cover opacity-45"
-          >
-            <source src="YOUR_VIDEO_LINK_HERE" type="video/mp4" />
-          </video>
-          <div className="absolute inset-0 bg-gradient-to-b from-[#0a0814]/35 via-[#120f24]/72 to-[#070b14]/92" />
-          <div className="absolute inset-0 bg-[radial-gradient(circle_at_20%_25%,rgba(139,92,246,0.22),transparent_40%),radial-gradient(circle_at_80%_30%,rgba(34,211,238,0.10),transparent_42%),radial-gradient(circle_at_50%_80%,rgba(168,85,247,0.18),transparent_48%)]" />
-          <div className="absolute inset-0 backdrop-blur-[1px]" />
-        </div>
-
-        <AmbientCanvas />
-
-        <div className="relative mx-auto max-w-6xl">
-          <div className="pointer-events-none absolute -right-10 top-6 hidden h-[520px] w-[520px] opacity-35 md:block">
-            <motion.div
-              initial={{ opacity: 0, scale: 0.95 }}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={{ duration: 0.9, ease: [0.76, 0, 0.24, 1] }}
-              className="h-full w-full"
-            >
-              <div className="absolute inset-0 rounded-full bg-[radial-gradient(circle_at_30%_30%,rgba(34,211,238,0.20),transparent_55%),radial-gradient(circle_at_70%_40%,rgba(168,85,247,0.18),transparent_60%)] blur-2xl" />
-              <div className="relative h-full w-full mix-blend-screen">
-                <Lottie animationData={heroSolverLottie} loop />
-              </div>
-            </motion.div>
-          </div>
-
-          <div className="relative max-w-4xl">
-            <motion.div
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.55, ease: [0.76, 0, 0.24, 1] }}
-              className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/[0.06] px-4 py-2 text-xs font-semibold uppercase tracking-[0.22em] text-white/65 shadow-[0_18px_55px_rgba(11,18,32,0.22)] backdrop-blur-xl"
-            >
-              <span className="h-2 w-2 rounded-full bg-gradient-to-r from-cyan-400 to-violet-400" aria-hidden />
-              We solve product chaos
-            </motion.div>
-
-            <SplitReveal
-              text="From messy flows → crisp systems."
-              className="hero-title mt-8 max-w-4xl text-6xl leading-[0.9] font-semibold tracking-tight text-white md:text-8xl"
-            />
-
-            <motion.p
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.55, delay: 0.06 }}
-              className="mt-6 max-w-2xl text-xl text-white/70 md:text-2xl"
-            >
-              We design and build websites and SaaS products that feel effortless—because the system underneath is engineered.
-            </motion.p>
-
-            <motion.div
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.55, delay: 0.12 }}
-              className="mt-10 flex flex-col gap-4 sm:flex-row sm:items-center"
-            >
-              <Link
-                href="/contact"
-                className="magnetic inline-flex items-center justify-center rounded-full bg-gradient-to-r from-violet-500 to-cyan-500 px-8 py-4 text-base font-semibold tracking-tight text-white shadow-[0_18px_60px_rgba(76,29,149,0.35)] transition-transform hover:-translate-y-0.5"
-                data-cursor="Open"
-                data-magnetic
-              >
-                Start a Project
-              </Link>
-              <Link
-                href="/portfolio"
-                className="magnetic inline-flex items-center justify-center rounded-full border border-white/10 bg-white/[0.06] px-8 py-4 text-base font-semibold tracking-tight text-white/85 shadow-[0_18px_55px_rgba(11,18,32,0.20)] backdrop-blur-xl transition-transform hover:-translate-y-0.5"
-                data-cursor="View"
-                data-magnetic
-              >
-                See proof
-                <span className="ml-2 text-white/40" aria-hidden>→</span>
-              </Link>
-            </motion.div>
-
-            <motion.div
-              initial={{ opacity: 0, y: 14 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6, delay: 0.18 }}
-              className="mt-10 flex flex-wrap gap-3"
-            >
-              {[
-                ["Audit", "Find the friction"],
-                ["Design", "Systemize the UI"],
-                ["Build", "Ship with motion"],
-                ["Optimize", "Scale conversion"],
-              ].map(([k, v], idx) => (
-                <motion.div
-                  key={k}
-                  whileHover={{ y: -4 }}
-                  transition={{ type: "spring", stiffness: 260, damping: 18 }}
-                  className="group rounded-full border border-white/10 bg-white/[0.06] px-4 py-3 shadow-[0_18px_55px_rgba(11,18,32,0.14)] backdrop-blur-xl"
-                >
-                  <div className="flex items-center gap-3">
-                    <span className="grid h-7 w-7 place-items-center rounded-full bg-white/10 text-xs font-semibold text-white/60">
-                      0{idx + 1}
-                    </span>
-                    <div className="leading-tight">
-                      <p className="text-sm font-semibold tracking-tight text-white">{k}</p>
-                      <p className="text-xs text-white/50">{v}</p>
-                    </div>
-                  </div>
-                </motion.div>
-              ))}
-            </motion.div>
-          </div>
-          <div className="p-36" />
-        </div>
-        <div className="pointer-events-none absolute bottom-0 left-0 z-10 h-48 w-full bg-gradient-to-t from-[#070a12] via-[#070a12]/90 to-transparent" />
-      </section>
+      <HeroSection />
       {/*hero-ends*/}
 
       {/*services*/}
@@ -667,6 +409,11 @@ np
 {/* process-redesign-ends */}
 
       {/* process → featured-work blend */}
+      <div className="pointer-events-none relative z-10 -mb-1 h-40 bg-gradient-to-b from-[#06070b] via-[#06090f] to-[#070a12]">
+        {/* carry the violet blob downward */}
+        <div className="absolute bottom-0 right-[-10%] h-64 w-64 rounded-full bg-violet-500/10 blur-[100px]" />
+        <div className="absolute bottom-0 left-[-5%] h-48 w-48 rounded-full bg-cyan-500/8 blur-[80px]" />
+      </div>
 
       {/*featured-work*/}
       <section className="relative w-full overflow-hidden bg-[#070a12] px-6 pb-28 pt-36 text-white md:px-12">
@@ -674,13 +421,45 @@ np
         <div className="pointer-events-none absolute inset-0 overflow-hidden">
           <div className="absolute -left-20 top-0 h-[480px] w-[480px] rounded-full bg-cyan-500/10 blur-[140px]" />
           <div className="absolute -right-20 bottom-0 h-[480px] w-[480px] rounded-full bg-violet-500/10 blur-[140px]" />
-          {/* floating ghost typography */}
-          <div className="absolute right-[-3%] top-8 select-none text-[200px] font-semibold leading-none tracking-[-0.08em] text-white/[0.04]">
-            WORK
-          </div>
-          <div className="absolute bottom-[-2%] left-[8%] select-none text-[160px] font-semibold leading-none tracking-[-0.08em] text-cyan-300/[0.06]">
-            CRAFT
-          </div>
+
+          {/* scattered icon constellation */}
+          {([
+            /* top row */
+            { name: "nextjs",      top: "4%",  left: "2%",   size: 72, opacity: 0.13, dur: 28 },
+            { name: "react",       top: "7%",  left: "14%",  size: 54, opacity: 0.09, dur: 22 },
+            { name: "typescript",  top: "3%",  left: "28%",  size: 64, opacity: 0.11, dur: 34 },
+            { name: "graphql",     top: "6%",  left: "44%",  size: 56, opacity: 0.09, dur: 26 },
+            { name: "vercel",      top: "3%",  left: "60%",  size: 68, opacity: 0.12, dur: 30 },
+            { name: "figma",       top: "7%",  left: "74%",  size: 52, opacity: 0.09, dur: 24 },
+            { name: "aws",         top: "4%",  left: "88%",  size: 60, opacity: 0.10, dur: 20 },
+            /* middle row */
+            { name: "docker",      top: "40%", left: "0%",   size: 66, opacity: 0.08, dur: 32 },
+            { name: "nodejs",      top: "38%", left: "13%",  size: 50, opacity: 0.07, dur: 24 },
+            { name: "tailwindcss", top: "42%", left: "26%",  size: 70, opacity: 0.10, dur: 36 },
+            { name: "github",      top: "37%", left: "42%",  size: 54, opacity: 0.08, dur: 22 },
+            { name: "react",       top: "43%", left: "57%",  size: 62, opacity: 0.09, dur: 28 },
+            { name: "typescript",  top: "39%", left: "72%",  size: 56, opacity: 0.08, dur: 30 },
+            { name: "nextjs",      top: "41%", left: "87%",  size: 64, opacity: 0.10, dur: 26 },
+            /* bottom row */
+            { name: "graphql",     top: "76%", left: "3%",   size: 58, opacity: 0.09, dur: 28 },
+            { name: "vercel",      top: "80%", left: "16%",  size: 48, opacity: 0.07, dur: 20 },
+            { name: "aws",         top: "74%", left: "30%",  size: 66, opacity: 0.10, dur: 32 },
+            { name: "docker",      top: "78%", left: "46%",  size: 52, opacity: 0.08, dur: 24 },
+            { name: "nodejs",      top: "75%", left: "62%",  size: 70, opacity: 0.11, dur: 36 },
+            { name: "figma",       top: "80%", left: "77%",  size: 54, opacity: 0.08, dur: 22 },
+            { name: "tailwindcss", top: "76%", left: "91%",  size: 60, opacity: 0.09, dur: 30 },
+          ] as { name: import("tech-stack-icons").IconName; top: string; left: string; size: number; opacity: number; dur: number }[]).map((ic, i) => (
+            <div
+              key={i}
+              className="absolute"
+              style={{ top: ic.top, left: ic.left, opacity: ic.opacity }}
+            >
+              <div style={{ animation: `rotate-slow ${ic.dur}s linear infinite`, width: ic.size, height: ic.size }}>
+                <StackIcon name={ic.name} variant="light" style={{ width: ic.size, height: ic.size }} />
+              </div>
+            </div>
+          ))}
+
           {/* subtle grid */}
           <div className="absolute inset-0 bg-[linear-gradient(to_bottom,rgba(255,255,255,0.015)_1px,transparent_1px)] bg-[size:100%_72px]" />
         </div>
@@ -718,24 +497,7 @@ np
       </section>
       {/*featured-work-ends*/}
 
-      {/*tech-stack*/}
-      <section className="bg-[#070a12] py-10 border-t border-white/[0.06]">
-        <div className="px-6 md:px-12">
-          <div className="mx-auto flex w-full max-w-6xl flex-nowrap items-center justify-between gap-4">
-            {techStackLogos.map((name) => (
-              <div
-                key={name}
-                className="grid h-12 w-12 place-items-center rounded-2xl bg-white/15 shadow-[0_10px_22px_rgba(11,18,32,0.08)] ring-1 ring-black/5 backdrop-blur md:h-14 md:w-14"
-              >
-                <div className="animate-[spin_30s_linear_infinite] opacity-90">
-                  <StackIcon name={name} variant="light" className="stack-icon-clean h-9 w-9 md:h-8 md:w-8" />
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-      {/*tech-stack-ends*/}
+      
 
       {/*insights*/}
       <section className="w-full bg-[var(--bg-secondary)]/55 backdrop-blur-xl">

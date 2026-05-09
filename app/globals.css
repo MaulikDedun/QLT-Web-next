@@ -16,8 +16,9 @@
 @theme inline {
   --color-background: var(--bg-primary);
   --color-foreground: var(--text-primary);
-  --font-sans: var(--font-geist-sans);
+  --font-sans: var(--font-inter);
   --font-mono: var(--font-geist-mono);
+  --font-display: var(--font-syne);
 }
 
 * {
@@ -33,8 +34,19 @@ body {
 body {
   background: var(--bg-primary);
   color: var(--text-primary);
-  font-family: var(--font-geist-sans), Inter, sans-serif;
+  font-family: var(--font-inter), Inter, sans-serif;
   overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Headings use Syne */
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-syne), sans-serif;
+}
+
+/* Mono labels */
+.label, .font-mono {
+  font-family: var(--font-geist-mono), monospace;
 }
 
 .section-shell {
