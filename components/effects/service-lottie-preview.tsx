@@ -1,7 +1,6 @@
 "use client";
 
 import { AnimatePresence, motion } from "framer-motion";
-import Lottie from "lottie-react";
 import Image from "next/image";
 
 type ServiceLottiePreviewProps = {
@@ -76,23 +75,22 @@ export function ServiceLottiePreview({ serviceSlug, service, note, previewImageU
         <p className="text-xs uppercase tracking-[0.2em] text-white/50">Live Preview</p>
         <h3 className="mt-3 text-2xl leading-tight md:text-3xl">{service}</h3>
         <p className="mt-2 max-w-xl text-sm text-white/65">{note}</p>
-        <div className="relative mt-7 h-72 overflow-hidden rounded-2xl border border-white/10 bg-gradient-to-br from-white/5 to-transparent">
-          <Image src={previewImageUrl} alt={service} fill sizes="(max-width: 768px) 100vw, 45vw" className="object-cover opacity-35" />
-          <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-black/10 to-transparent" />
-          <div className="relative z-10 grid h-full place-items-center">
-            <div className="h-44 w-44">
-              <Lottie animationData={animationData} loop />
-            </div>
-          </div>
-          <div className="absolute inset-x-0 bottom-0 h-24 overflow-hidden border-t border-white/15 bg-black/55">
-            <Image
-              src={previewGifUrl}
-              alt={`${service} live gif`}
-              fill
-              sizes="(max-width: 768px) 100vw, 45vw"
-              className="object-cover opacity-90"
-              unoptimized
-            />
+        <div className="relative mt-7 h-112 overflow-hidden rounded-2xl border border-white/10 bg-[#0a0a0a]">
+          {/* GIF only — full bleed */}
+          <Image
+            src={previewGifUrl}
+            alt={`${service} preview`}
+            fill
+            sizes="(max-width: 768px) 100vw, 45vw"
+            className="object-cover opacity-80"
+            unoptimized
+          />
+          {/* subtle dark vignette so text stays readable */}
+          <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/10 to-transparent" />
+          {/* bottom label */}
+          <div className="absolute inset-x-0 bottom-0 flex items-center justify-between px-5 py-4">
+            <span className="text-[11px] uppercase tracking-[0.22em] text-white/45">Live Preview</span>
+            <span className="text-[11px] uppercase tracking-[0.22em] text-white/30">{note}</span>
           </div>
         </div>
       </motion.div>
