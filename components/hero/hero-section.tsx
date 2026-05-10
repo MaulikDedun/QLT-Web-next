@@ -19,8 +19,8 @@ function MagneticGrid() {
     const ctx = canvas.getContext("2d");
     if (!ctx) return;
 
-    const COLS = 38;
-    const ROWS = 26;
+    const COLS = 28;
+    const ROWS = 16;
     let W = 0, H = 0;
     let gx = 0, gy = 0; // grid cell size
 

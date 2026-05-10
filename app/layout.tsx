@@ -38,7 +38,7 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${syne.variable} ${inter.variable} ${geistMono.variable} h-full antialiased`}
+      className={`${syne.variable} ${inter.variable} ${geistMono.variable} antialiased`}
     >
       <body className="min-h-full flex flex-col bg-[var(--bg-primary)] text-[var(--text-primary)]">
         <SiteLoader />
