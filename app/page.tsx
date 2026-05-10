@@ -652,32 +652,7 @@
         </section>
         {/*insights-ends*/}
 
-        {/*ready-to-build*/}
-        <section className="relative overflow-hidden bg-[#070a12] px-6 py-20 text-white md:px-12 md:py-24">
-          <div className="pointer-events-none absolute inset-0">
-            <div className="absolute inset-0 bg-[radial-gradient(circle_at_20%_10%,rgba(34,211,238,0.14),transparent_50%),radial-gradient(circle_at_85%_30%,rgba(168,85,247,0.12),transparent_55%)]" />
-            <div className="absolute inset-0 bg-gradient-to-b from-[#070a12]/45 via-[#070a12]/78 to-[#070a12]" />
-          </div>
-          <div className="relative mx-auto max-w-6xl">
-            <div className="section-shell noise-overlay mx-auto max-w-5xl rounded-[2.75rem] border border-white/10 bg-white/[0.03] px-6 py-14 text-center shadow-[0_24px_90px_rgba(0,0,0,0.35)] backdrop-blur-xl md:px-14 md:py-18">
-              <p className="text-xs uppercase tracking-[0.28em] text-white/60">Ready to Build</p>
-              <SplitReveal text="Let's Build Something Exceptional." className="mt-6 text-4xl leading-[1.02] md:text-7xl" />
-              <p className="mx-auto mt-5 max-w-2xl text-sm text-white/65 md:text-base">
-                Tell us what you're building—we'll respond with a clear roadmap, timeline, and next steps.
-              </p>
-              <button
-                className="btn-flip magnetic mt-10 w-full sm:w-auto"
-                data-front="Start a project"
-                data-back="Let's create"
-                data-cursor="Open"
-                data-magnetic
-              >
-                Start a Project
-              </button>
-            </div>
-          </div>
-        </section>
-        {/*ready-to-build-ends*/}
+
 
         <AnimatePresence>
           {showDemo && (
