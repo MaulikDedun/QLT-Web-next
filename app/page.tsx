@@ -336,50 +336,6 @@ export default function Home() {
       </section>
 
       {/* ── CTA ── */}
-      <section className="relative overflow-hidden bg-[#06070b] px-6 py-32 text-white md:px-12">
-        <div className="pointer-events-none absolute inset-0 overflow-hidden" aria-hidden>
-          <motion.div animate={{ scale:[1,1.15,1], opacity:[0.12,0.20,0.12] }}
-            transition={{ duration:9, repeat:Infinity, ease:"easeInOut" }}
-            className="absolute left-1/4 top-1/2 h-[500px] w-[500px] -translate-x-1/2 -translate-y-1/2 rounded-full bg-violet-600/20 blur-[150px]" />
-          <motion.div animate={{ scale:[1,1.1,1], opacity:[0.08,0.15,0.08] }}
-            transition={{ duration:11, repeat:Infinity, ease:"easeInOut", delay:3 }}
-            className="absolute right-1/4 top-1/2 h-[400px] w-[400px] -translate-y-1/2 rounded-full bg-cyan-500/15 blur-[130px]" />
-        </div>
-
-        <div className="relative mx-auto max-w-4xl text-center">
-          <motion.div initial={{ opacity:0, y:30 }} whileInView={{ opacity:1, y:0 }}
-            viewport={{ once:true, amount:0.4 }} transition={{ duration:0.8, ease }}>
-            <p className="text-[11px] uppercase tracking-[0.32em] text-white/25">Ready to start?</p>
-            <h2 className="mt-6 text-[clamp(2.8rem,8vw,7.5rem)] font-semibold leading-[0.88] tracking-[-0.04em]">
-              Let&apos;s build
-              <br />
-              <span className="text-white/[0.16]">something real.</span>
-            </h2>
-            <p className="mx-auto mt-8 max-w-md text-base leading-relaxed text-white/38 md:text-lg">
-              Book a 30-minute call. We&apos;ll listen, ask the right questions, and tell you exactly how we can help.
-            </p>
-            <div className="mt-12 flex flex-col items-center gap-4 sm:flex-row sm:justify-center">
-              <Link href="/contact"
-                className="group inline-flex items-center gap-3 rounded-full bg-white px-8 py-4 text-[13px] font-semibold tracking-tight text-[#080808] transition-all duration-300 hover:bg-white/88 hover:shadow-[0_0_40px_rgba(255,255,255,0.14)]"
-                data-cursor="Open" data-magnetic>
-                Book a demo
-                <span className="grid h-5 w-5 place-items-center rounded-full bg-[#080808] text-white text-[10px] transition-transform duration-300 group-hover:translate-x-0.5">→</span>
-              </Link>
-              <Link href="/portfolio" className="text-[13px] text-white/28 underline underline-offset-4 decoration-white/10 transition-all hover:text-white/55 hover:decoration-white/28" data-cursor="View">
-                See our work first
-              </Link>
-            </div>
-          </motion.div>
-          <motion.div initial={{ scaleX:0 }} whileInView={{ scaleX:1 }} viewport={{ once:true }}
-            transition={{ duration:1.2, ease, delay:0.3 }}
-            className="mx-auto mt-20 h-px w-full max-w-xs origin-center bg-gradient-to-r from-transparent via-white/12 to-transparent" />
-          <motion.p initial={{ opacity:0 }} whileInView={{ opacity:1 }} viewport={{ once:true }}
-            transition={{ duration:0.6, delay:0.5 }}
-            className="mt-8 text-[11px] uppercase tracking-[0.28em] text-white/16">
-            40+ products shipped · 12+ years · No fluff
-          </motion.p>
-        </div>
-      </section>
 
       <EditorialPostModal post={activePost} onClose={() => setActivePost(null)} />
     </main>
