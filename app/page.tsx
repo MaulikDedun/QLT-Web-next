@@ -89,7 +89,7 @@ export default function Home() {
           </motion.div>
 
           {/* Shell */}
-          <div className="grid min-h-[64vh] w-full gap-6 overflow-hidden rounded-[2rem] border border-white/[0.08] bg-white/[0.02] p-6 md:grid-cols-[1.3fr_1fr] md:p-8 ">
+          <div className="grid min-h-[64vh] w-full gap-6 overflow-hidden rounded-[2rem] border border-white/[0.08] bg-white/[0.02] p-6 md:grid-cols-[2fr_1fr] md:p-8 ">
             {/* Preview */}
             <div className="rounded-2xl border border-white/[0.07] bg-white/[0.02] p-6 md:p-8 hidden md:block">
               <ServiceLottiePreview
