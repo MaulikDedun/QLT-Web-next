@@ -46,32 +46,32 @@ export const services: ServiceItem[] = [
     slug: "saas-development",
     note: "Connected product ecosystems",
     previewImageUrl:
-      "https://images.unsplash.com/photo-1551288049-bebda4e38f71?q=80&w=1600&auto=format&fit=crop",
-    previewGifUrl: "https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExM3FvZGJwdjlkMzk5a2tyaWoxd3JvbmUzdmxqc3VqMG8xdm0yb2xqZSZlcD12MV9naWZzX3NlYXJjaCZjdD1n/13HgwGsXF0aiGY/giphy.gif",
-  },
+      "qtl-next/public/img-load-err.webp",
+    previewGifUrl: "/quanta_uiux_clean.gif",
+ },
   {
     title: "UI/UX Systems",
     slug: "ui-ux-design",
     note: "Human-centered digital interface systems",
     previewImageUrl:
-      "https://images.unsplash.com/photo-1545239351-1141bd82e8a6?q=80&w=1600&auto=format&fit=crop",
-    previewGifUrl: "https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExM3FvZGJwdjlkMzk5a2tyaWoxd3JvbmUzdmxqc3VqMG8xdm0yb2xqZSZlcD12MV9naWZzX3NlYXJjaCZjdD1n/l41YtZOb9EUABnuqA/giphy.gif",
-  },
+      "/img-load-err.webp",
+    previewGifUrl: "/quanta_uiux_clean.gif",
+    },
   {
     title: "Web Development",
     slug: "web-development",
     note: "High-performance engineering architecture",
     previewImageUrl:
-      "https://images.unsplash.com/photo-1498050108023-c5249f4df085?q=80&w=1600&auto=format&fit=crop",
-    previewGifUrl: "https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExM3FvZGJwdjlkMzk5a2tyaWoxd3JvbmUzdmxqc3VqMG8xdm0yb2xqZSZlcD12MV9naWZzX3NlYXJjaCZjdD1n/coxQHKASG60HrHtvkt/giphy.gif",
-  },
+      "/img-load-err.webp",
+    previewGifUrl: "/webdev_short_title.gif",
+    },
   {
     title: "Growth & Optimization",
     slug: "growth-marketing",
     note: "Experimentation and scale loops",
     previewImageUrl:
-      "https://images.unsplash.com/photo-1677442136019-21780ecad995?q=80&w=1600&auto=format&fit=crop",
-    previewGifUrl: "https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExM3FvZGJwdjlkMzk5a2tyaWoxd3JvbmUzdmxqc3VqMG8xdm0yb2xqZSZlcD12MV9naWZzX3NlYXJjaCZjdD1n/kH1DBkPNyZPOk0BxrM/giphy.gif",
+      "/img-load-err.webp",
+    previewGifUrl: "/marketing_growth_clean_retry.gif",
   },
 ];
 
@@ -113,8 +113,8 @@ export const projects: ProjectItem[] = [
 export const processSteps: ProcessStep[] = [
   {
     title: "Discover",
-    description: "Turn ambiguity into a clear product narrative and measurable outcomes.",
-    bullets: ["Stakeholder mapping and goals", "Experience audits and heuristics", "Success metrics + scope"],
+    description: "We understand your goals, define the right direction, and create a clear roadmap for the product.",
+    bullets: ["Business goals & planning","User needs & research","Project scope & strategy"],
   },
   {
     title: "Plan",
@@ -129,7 +129,7 @@ export const processSteps: ProcessStep[] = [
   {
     title: "Build",
     description: "Ship performant frontend foundations and reliable product logic.",
-    bullets: ["Incremental implementation", "Accessibility and performance budgets", "Automation for quality + velocity"],
+    bullets: ["Fast and scalable architecture", "Reliable product systems", "Optimized user experience"],
   },
   {
     title: "Launch",
@@ -139,7 +139,7 @@ export const processSteps: ProcessStep[] = [
   {
     title: "Scale",
     description: "Evolve the product with iteration loops that compound.",
-    bullets: ["Continuous UX improvements", "Component growth + refactors", "Experimentation + conversion tuning"],
+    bullets: ["Continuous improvements", "Product expansion & scaling", "Test, learn & optimization"],
   },
 ];
 
