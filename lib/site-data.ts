@@ -47,7 +47,7 @@ export const services: ServiceItem[] = [
     note: "Connected product ecosystems",
     previewImageUrl:
       "qtl-next/public/img-load-err.webp",
-    previewGifUrl: "/quanta_uiux_clean.gif",
+    previewGifUrl: "/saas_dashboard_circle.gif",
  },
   {
     title: "UI/UX Systems",
